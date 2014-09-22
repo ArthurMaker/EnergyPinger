@@ -64,27 +64,23 @@ public class main extends Plugin {
 	        getLogger().info("[EnergyPing] Loading CMD_P...");
 
 	        if(config.getBoolean("DisableCommands.CMD_P") == true){
-		        getLogger().info("[EnergyPing] Config File - CMD_P Disabled!");
-		        return;
-	        }
-		        
-	        if(config.getBoolean("DisableCommands.CMD_P") == false){
+		        getLogger().info("[EnergyPing] Config File: CMD_P Disabled!");
+	        }else if(config.getBoolean("DisableCommands.CMD_P") == false){
 		        ProxyServer.getInstance().getPluginManager().registerCommand(this, new PingCommand("p"));
 		        getLogger().info("[EnergyPing] Config File: CMD_P Enabled!");
-		        return;
+	        }else{
+	        	 getLogger().info("[EnergyPing] Error! Only put: true/false");
 	        }
 	        
 	        getLogger().info("[EnergyPing] Loading CMD_PING...");
 
 	        if(config.getBoolean("DisableCommands.CMD_PING") == true){
 		        getLogger().info("[EnergyPing] Config File: CMD_PING Disabled!");
-		        return;
-	        }
-	        
-	        if(config.getBoolean("DisableCommands.CMD_PING") == false){
+	        }else if(config.getBoolean("DisableCommands.CMD_PING") == false){
 		        ProxyServer.getInstance().getPluginManager().registerCommand(this, new PingCommand("ping"));
 		        getLogger().info("[EnergyPing] Config File: CMD_PING Enabled!");
-		        return;
+	        }else{
+	        	 getLogger().info("[EnergyPing] Error! Only put: true/false");
 	        }
 
 	        getLogger().info("[EnergyPing] Loaded!");
