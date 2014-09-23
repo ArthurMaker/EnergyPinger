@@ -8,7 +8,10 @@ import java.io.OutputStream;
 
 import com.google.common.io.ByteStreams;
 
+import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -16,14 +19,21 @@ import net.md_5.bungee.config.YamlConfiguration;
 
 public class main extends Plugin {
 
-	 private Configuration config;
+	 private static Configuration config;
+	 public static File configFile;
 
 
 
 	@Override
 	    public void onEnable() {
-	        // You should not put an enable message in your plugin.
-	        // BungeeCord already does so
+        try {
+	        configFile = new File(getDataFolder(), "config.yml");
+			config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(configFile);
+			
+        } catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	        getLogger().info("[EnergyPing] Loading...");
 	        
 	        getLogger().info("[EnergyPing] Geting Config...");
@@ -34,7 +44,6 @@ public class main extends Plugin {
 
 
 	        }
-	        File configFile = new File(getDataFolder(), "config.yml");
 	        if (!configFile.exists()) {
 	            try {
 	                configFile.createNewFile();
@@ -45,18 +54,10 @@ public class main extends Plugin {
 	            } catch (IOException e) {
 	                throw new RuntimeException("Unable to create configuration file", e);
 	            }
-	        
-	        
-		        try {
-					config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(configFile);
-					
-		        } catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 		        getLogger().info("[EnergyPing] Creating configuration files...");
 		        config.set("DisableCommands.CMD_P", false);
 		        config.set("DisableCommands.CMD_PING", false);
+				config.set("Lang", "EN");
 		        SaveConfig();
 		        getLogger().info("[EnergyPing] Config Files ¡OK!");
 
@@ -82,15 +83,17 @@ public class main extends Plugin {
 	        }else{
 	        	 getLogger().info("[EnergyPing] Error! Only put: true/false");
 	        }
+	        getLogger().info("[EnergyPing] Config File: CMD_EnergyConfig Enabled!");
+	        ProxyServer.getInstance().getPluginManager().registerCommand(this, new ConfigCommand("EnergyConfig"));
 
 	        getLogger().info("[EnergyPing] Loaded!");
 	    }
 	 
 	 
 	 
-	 public void SaveConfig(){
+	 public static void SaveConfig(){
 		 try {
-			ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, new File(getDataFolder(), "config.yml"));
+			ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, configFile);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
